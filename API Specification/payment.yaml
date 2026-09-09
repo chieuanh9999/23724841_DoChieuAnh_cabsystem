@@ -1,11 +1,12 @@
 openapi: 3.0.3
 info:
   title: CAB System - Payment API
+  description: Tính cước và xử lý giao dịch.
   version: 1.0.0
 paths:
   /payments/fare:
     get:
-      summary: Tính cước chuyến đi (FR4.1)
+      summary: Tính cước chuyến đi sau khi hoàn thành (FR4.1)
       security:
         - BearerAuth: []
       parameters:
@@ -15,15 +16,41 @@ paths:
           schema: { type: string }
       responses:
         '200':
-          description: Trả về số tiền cước
+          description: Số tiền cước
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  base_fare: { type: number, example: 20000 }
+                  distance_km: { type: number, example: 5.5 }
+                  total_amount: { type: number, example: 85000 }
   /payments/checkout:
     post:
       summary: Thanh toán chuyến đi (FR4.2 -> FR4.5)
       security:
         - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [trip_id, method]
+              properties:
+                trip_id: { type: string, example: "trip-999" }
+                method: { type: string, enum: [CASH, E_WALLET, CREDIT_CARD], example: "E_WALLET" }
       responses:
         '200':
-          description: Xử lý thanh toán thành công hoặc URL cổng thanh toán
+          description: Kết quả xử lý thanh toán
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  payment_id: { type: string }
+                  status: { type: string, enum: [SUCCESS, PENDING, FAILED] }
+                  payment_url: { type: string, description: "URL chuyển hướng nếu chọn ví điện tử/thẻ" }
 components:
   securitySchemes:
     BearerAuth:
