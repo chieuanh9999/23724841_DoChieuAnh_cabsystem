@@ -1,6 +1,7 @@
 openapi: 3.0.3
 info:
   title: CAB System - Trip API
+  description: Xử lý logic đặt xe và theo dõi hành trình.
   version: 1.0.0
 paths:
   /trips:
@@ -8,9 +9,27 @@ paths:
       summary: Khách hàng gửi yêu cầu đặt xe (FR1.1 -> FR1.4)
       security:
         - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [pickup_location, dropoff_location, service_type_id]
+              properties:
+                pickup_location: { type: string, example: "12 Nguyễn Văn Bảo, Gò Vấp" }
+                dropoff_location: { type: string, example: "Sân bay Tân Sơn Nhất" }
+                service_type_id: { type: string, example: "4_SEATS" }
       responses:
         '201':
-          description: Yêu cầu được tiếp nhận, đang tìm tài xế
+          description: Yêu cầu được tiếp nhận, bắt đầu tìm tài xế
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  trip_id: { type: string, example: "trip-999" }
+                  status: { type: string, example: "SEARCHING" }
   /trips/{trip_id}/status:
     patch:
       summary: Tài xế cập nhật trạng thái chuyến đi (FR3.2)
@@ -21,6 +40,17 @@ paths:
           in: path
           required: true
           schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [status]
+              properties:
+                status: 
+                  type: string
+                  enum: [ARRIVED_AT_PICKUP, PICKED_UP, IN_TRANSIT, COMPLETED]
       responses:
         '200':
           description: Trạng thái đã cập nhật
@@ -36,7 +66,16 @@ paths:
           schema: { type: string }
       responses:
         '200':
-          description: Thông tin ETA và vị trí
+          description: Trả về thông tin vị trí tài xế và thời gian đến dự kiến
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  driver_lat: { type: number, format: float }
+                  driver_lng: { type: number, format: float }
+                  eta_minutes: { type: integer, example: 5 }
+                  status: { type: string }
 components:
   securitySchemes:
     BearerAuth:
