@@ -1,0 +1,26 @@
+openapi: 3.0.3
+info:
+  title: CAB System - Customer API
+  version: 1.0.0
+paths:
+  /customers/profile:
+    put:
+      summary: Khách hàng cập nhật thông tin cá nhân (FR6.3)
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Thành công
+  /customers/trips:
+    get:
+      summary: Xem lịch sử chuyến đi (FR3.4)
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Danh sách chuyến đi
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
