@@ -1,0 +1,18 @@
+openapi: 3.0.3
+info:
+  title: CAB System - Notification API
+  version: 1.0.0
+paths:
+  /notifications:
+    get:
+      summary: Lấy danh sách thông báo của người dùng (FR5.1, FR5.2)
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Danh sách thông báo
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
