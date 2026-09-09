@@ -11,13 +11,24 @@ paths:
       parameters:
         - name: from_date
           in: query
-          schema: { type: string, format: date }
+          required: true
+          schema: { type: string, format: date, example: "2026-09-01" }
         - name: to_date
           in: query
-          schema: { type: string, format: date }
+          required: true
+          schema: { type: string, format: date, example: "2026-09-30" }
       responses:
         '200':
-          description: Dữ liệu thống kê
+          description: Dữ liệu thống kê tổng hợp
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_trips: { type: integer, example: 1500 }
+                  completed_trips: { type: integer, example: 1420 }
+                  total_revenue: { type: number, example: 120500000 }
+                  completion_rate: { type: string, example: "94.6%" }
 components:
   securitySchemes:
     BearerAuth:
