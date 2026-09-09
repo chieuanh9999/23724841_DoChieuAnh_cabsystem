@@ -1,6 +1,7 @@
 openapi: 3.0.3
 info:
   title: CAB System - Auth API
+  description: Quản lý đăng ký và xác thực người dùng.
   version: 1.0.0
 paths:
   /auth/register:
@@ -12,13 +13,27 @@ paths:
           application/json:
             schema:
               type: object
+              required: [role, full_name, phone_number, password]
               properties:
-                role: { type: string, enum: [CUSTOMER, DRIVER] }
-                phone_number: { type: string }
-                password: { type: string }
+                role: 
+                  type: string
+                  enum: [CUSTOMER, DRIVER]
+                  example: CUSTOMER
+                full_name:
+                  type: string
+                  example: Nguyễn Văn A
+                phone_number:
+                  type: string
+                  example: "0901234567"
+                password:
+                  type: string
+                  format: password
+                  example: Password@123
       responses:
         '201':
           description: Đăng ký thành công
+        '400':
+          description: Dữ liệu không hợp lệ
   /auth/login:
     post:
       summary: Đăng nhập hệ thống (FR6.2, FR11.1)
@@ -28,9 +43,24 @@ paths:
           application/json:
             schema:
               type: object
+              required: [phone_number, password]
               properties:
-                phone_number: { type: string }
-                password: { type: string }
+                phone_number:
+                  type: string
+                  example: "0901234567"
+                password:
+                  type: string
+                  format: password
+                  example: Password@123
       responses:
         '200':
-          description: Access Token
+          description: Đăng nhập thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token: { type: string, example: "eyJhbGci..." }
+                  token_type: { type: string, example: "Bearer" }
+        '401':
+          description: Sai thông tin đăng nhập
