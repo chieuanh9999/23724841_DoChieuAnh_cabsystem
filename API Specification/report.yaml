@@ -1,0 +1,25 @@
+openapi: 3.0.3
+info:
+  title: CAB System - Report API
+  version: 1.0.0
+paths:
+  /reports/dashboard:
+    get:
+      summary: Báo cáo số lượng chuyến, doanh thu, tỷ lệ hoàn thành (FR10.1, FR10.2, FR10.3)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: from_date
+          in: query
+          schema: { type: string, format: date }
+        - name: to_date
+          in: query
+          schema: { type: string, format: date }
+      responses:
+        '200':
+          description: Dữ liệu thống kê
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
