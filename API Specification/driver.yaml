@@ -1,0 +1,34 @@
+openapi: 3.0.3
+info:
+  title: CAB System - Driver API
+  version: 1.0.0
+paths:
+  /drivers/profile:
+    put:
+      summary: Tài xế cập nhật hồ sơ cá nhân và phương tiện (FR7.2)
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Thành công
+  /drivers/status:
+    patch:
+      summary: Chuyển đổi trạng thái sẵn sàng nhận chuyến (FR7.3)
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Đổi trạng thái thành công
+  /drivers/location:
+    post:
+      summary: Cập nhật vị trí GPS hiện tại (FR7.4)
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Cập nhật vị trí thành công
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
