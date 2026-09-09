@@ -1,0 +1,39 @@
+openapi: 3.0.3
+info:
+  title: CAB System - Admin API
+  version: 1.0.0
+paths:
+  /admin/users:
+    get:
+      summary: Quản lý thông tin khách hàng, tài xế (FR9.1)
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Danh sách người dùng
+  /admin/trips/live:
+    get:
+      summary: Giám sát chuyến đi đang diễn ra (FR9.2)
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Danh sách chuyến xe thời gian thực
+  /admin/trips/{trip_id}/resolve:
+    post:
+      summary: Xử lý sự cố chuyến đi (FR9.3, FR12.1)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: trip_id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Xử lý thành công
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
