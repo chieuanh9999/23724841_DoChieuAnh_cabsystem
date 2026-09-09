@@ -8,9 +8,24 @@ paths:
       summary: Lấy danh sách thông báo của người dùng (FR5.1, FR5.2)
       security:
         - BearerAuth: []
+      parameters:
+        - name: is_read
+          in: query
+          schema: { type: boolean, default: false }
       responses:
         '200':
           description: Danh sách thông báo
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    notification_id: { type: string }
+                    title: { type: string, example: "Tài xế đang đến" }
+                    message: { type: string, example: "Tài xế Nguyễn Văn A đang trên đường đến đón bạn." }
+                    sent_at: { type: string, format: date-time }
 components:
   securitySchemes:
     BearerAuth:
