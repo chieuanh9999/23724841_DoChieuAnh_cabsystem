@@ -1,6 +1,7 @@
 openapi: 3.0.3
 info:
   title: CAB System - Driver API
+  description: Quản lý hồ sơ, trạng thái sẵn sàng và GPS của tài xế.
   version: 1.0.0
 paths:
   /drivers/profile:
@@ -8,14 +9,36 @@ paths:
       summary: Tài xế cập nhật hồ sơ cá nhân và phương tiện (FR7.2)
       security:
         - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                plate_number: { type: string, example: "59A-123.45" }
+                model: { type: string, example: "Toyota Vios" }
+                color: { type: string, example: "Trắng" }
       responses:
         '200':
-          description: Thành công
+          description: Cập nhật thành công
   /drivers/status:
     patch:
       summary: Chuyển đổi trạng thái sẵn sàng nhận chuyến (FR7.3)
       security:
         - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [status]
+              properties:
+                status: 
+                  type: string
+                  enum: [AVAILABLE, BUSY, OFFLINE]
+                  example: AVAILABLE
       responses:
         '200':
           description: Đổi trạng thái thành công
@@ -24,9 +47,19 @@ paths:
       summary: Cập nhật vị trí GPS hiện tại (FR7.4)
       security:
         - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [lat, lng]
+              properties:
+                lat: { type: number, format: float, example: 10.822159 }
+                lng: { type: number, format: float, example: 106.686844 }
       responses:
         '200':
-          description: Cập nhật vị trí thành công
+          description: Vị trí được hệ thống ghi nhận
 components:
   securitySchemes:
     BearerAuth:
