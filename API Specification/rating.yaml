@@ -1,0 +1,28 @@
+openapi: 3.0.3
+info:
+  title: CAB System - Rating API
+  version: 1.0.0
+paths:
+  /ratings:
+    post:
+      summary: Khách hàng đánh giá tài xế (FR8.1, FR8.2)
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                trip_id: { type: string }
+                score: { type: integer, minimum: 1, maximum: 5 }
+                comment: { type: string }
+      responses:
+        '201':
+          description: Gửi đánh giá thành công
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
