@@ -14,13 +14,14 @@ paths:
           application/json:
             schema:
               type: object
+              required: [trip_id, score]
               properties:
-                trip_id: { type: string }
-                score: { type: integer, minimum: 1, maximum: 5 }
-                comment: { type: string }
+                trip_id: { type: string, example: "trip-999" }
+                score: { type: integer, minimum: 1, maximum: 5, example: 5 }
+                comment: { type: string, example: "Tài xế chạy êm, nhiệt tình!" }
       responses:
         '201':
-          description: Gửi đánh giá thành công
+          description: Đã lưu đánh giá
 components:
   securitySchemes:
     BearerAuth:
