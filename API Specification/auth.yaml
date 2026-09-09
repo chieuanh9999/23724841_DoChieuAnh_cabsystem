@@ -1,1 +1,36 @@
-
+openapi: 3.0.3
+info:
+  title: CAB System - Auth API
+  version: 1.0.0
+paths:
+  /auth/register:
+    post:
+      summary: Khách hàng và tài xế đăng ký tài khoản (FR6.1, FR7.1)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                role: { type: string, enum: [CUSTOMER, DRIVER] }
+                phone_number: { type: string }
+                password: { type: string }
+      responses:
+        '201':
+          description: Đăng ký thành công
+  /auth/login:
+    post:
+      summary: Đăng nhập hệ thống (FR6.2, FR11.1)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                phone_number: { type: string }
+                password: { type: string }
+      responses:
+        '200':
+          description: Access Token
