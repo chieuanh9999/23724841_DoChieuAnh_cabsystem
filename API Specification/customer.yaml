@@ -1,6 +1,7 @@
 openapi: 3.0.3
 info:
   title: CAB System - Customer API
+  description: Quản lý thông tin và lịch sử của khách hàng.
   version: 1.0.0
 paths:
   /customers/profile:
@@ -8,17 +9,45 @@ paths:
       summary: Khách hàng cập nhật thông tin cá nhân (FR6.3)
       security:
         - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                full_name: { type: string, example: "Nguyễn Văn B" }
+                email: { type: string, format: email, example: "nguyenvanb@gmail.com" }
       responses:
         '200':
-          description: Thành công
+          description: Cập nhật hồ sơ thành công
   /customers/trips:
     get:
       summary: Xem lịch sử chuyến đi (FR3.4)
       security:
         - BearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema: { type: integer, default: 1 }
+        - name: limit
+          in: query
+          schema: { type: integer, default: 10 }
       responses:
         '200':
-          description: Danh sách chuyến đi
+          description: Danh sách lịch sử chuyến đi
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    trip_id: { type: string }
+                    pickup_location: { type: string }
+                    dropoff_location: { type: string }
+                    status: { type: string }
+                    fare_amount: { type: number }
 components:
   securitySchemes:
     BearerAuth:
