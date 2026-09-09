@@ -1,0 +1,44 @@
+openapi: 3.0.3
+info:
+  title: CAB System - Trip API
+  version: 1.0.0
+paths:
+  /trips:
+    post:
+      summary: Khách hàng gửi yêu cầu đặt xe (FR1.1 -> FR1.4)
+      security:
+        - BearerAuth: []
+      responses:
+        '201':
+          description: Yêu cầu được tiếp nhận, đang tìm tài xế
+  /trips/{trip_id}/status:
+    patch:
+      summary: Tài xế cập nhật trạng thái chuyến đi (FR3.2)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: trip_id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Trạng thái đã cập nhật
+  /trips/{trip_id}/tracking:
+    get:
+      summary: Khách hàng theo dõi trạng thái và ETA (FR3.1, FR3.3)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: trip_id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Thông tin ETA và vị trí
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
