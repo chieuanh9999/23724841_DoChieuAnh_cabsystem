@@ -1,1 +1,386 @@
-
+[
+  {
+    "test_id": "TC_AUTH_001",
+    "requirement_reference": {
+      "fr_id": "FR6.1, FR7.1",
+      "description": "Khách hàng và tài xế đăng ký tài khoản[cite: 1, 3]"
+    },
+    "test_scenario": "Đăng ký tài khoản Khách hàng thành công với đầy đủ thông tin hợp lệ[cite: 3]",
+    "input": {
+      "endpoint": "POST /auth/register",
+      "headers": { "Content-Type": "application/json" },
+      "body": {
+        "role": "CUSTOMER",
+        "full_name": "Nguyễn Văn A",
+        "phone_number": "0901234567",
+        "password": "Password@123"
+      }
+    },
+    "expected_output": {
+      "status_code": 201,
+      "message": "Đăng ký thành công[cite: 3]"
+    }
+  },
+  {
+    "test_id": "TC_AUTH_002",
+    "requirement_reference": {
+      "fr_id": "FR6.2, FR11.1",
+      "description": "Đăng nhập hệ thống và xác thực[cite: 1, 3]"
+    },
+    "test_scenario": "Đăng nhập thành công và nhận được token[cite: 3]",
+    "input": {
+      "endpoint": "POST /auth/login",
+      "headers": { "Content-Type": "application/json" },
+      "body": {
+        "phone_number": "0901234567",
+        "password": "Password@123"
+      }
+    },
+    "expected_output": {
+      "status_code": 200,
+      "body": {
+        "access_token": "eyJhbGci...",
+        "token_type": "Bearer"
+      },
+      "description": "Đăng nhập thành công[cite: 3]"
+    }
+  },
+  {
+    "test_id": "TC_CUST_001",
+    "requirement_reference": {
+      "fr_id": "FR6.3",
+      "description": "Khách hàng cập nhật thông tin cá nhân[cite: 1, 4]"
+    },
+    "test_scenario": "Khách hàng cập nhật hồ sơ cá nhân thành công[cite: 4]",
+    "input": {
+      "endpoint": "PUT /customers/profile",
+      "headers": {
+        "Authorization": "Bearer <valid_token>",
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "full_name": "Nguyễn Văn B",
+        "email": "nguyenvanb@gmail.com"
+      }
+    },
+    "expected_output": {
+      "status_code": 200,
+      "message": "Cập nhật hồ sơ thành công[cite: 4]"
+    }
+  },
+  {
+    "test_id": "TC_CUST_002",
+    "requirement_reference": {
+      "fr_id": "FR3.4",
+      "description": "Xem lịch sử chuyến đi[cite: 1, 4]"
+    },
+    "test_scenario": "Khách hàng lấy danh sách lịch sử chuyến đi thành công[cite: 4]",
+    "input": {
+      "endpoint": "GET /customers/trips?page=1&limit=10",
+      "headers": { "Authorization": "Bearer <valid_token>" }
+    },
+    "expected_output": {
+      "status_code": 200,
+      "description": "Danh sách lịch sử chuyến đi[cite: 4]"
+    }
+  },
+  {
+    "test_id": "TC_DRIV_001",
+    "requirement_reference": {
+      "fr_id": "FR7.2",
+      "description": "Tài xế cập nhật hồ sơ cá nhân và phương tiện[cite: 1, 5]"
+    },
+    "test_scenario": "Tài xế cập nhật thông tin xe thành công[cite: 5]",
+    "input": {
+      "endpoint": "PUT /drivers/profile",
+      "headers": {
+        "Authorization": "Bearer <valid_driver_token>",
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "plate_number": "59A-123.45",
+        "model": "Toyota Vios",
+        "color": "Trắng"
+      }
+    },
+    "expected_output": {
+      "status_code": 200,
+      "message": "Cập nhật thành công[cite: 5]"
+    }
+  },
+  {
+    "test_id": "TC_DRIV_002",
+    "requirement_reference": {
+      "fr_id": "FR7.3",
+      "description": "Chuyển đổi trạng thái sẵn sàng nhận chuyến[cite: 1, 5]"
+    },
+    "test_scenario": "Tài xế đổi trạng thái sang AVAILABLE[cite: 5]",
+    "input": {
+      "endpoint": "PATCH /drivers/status",
+      "headers": {
+        "Authorization": "Bearer <valid_driver_token>",
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "status": "AVAILABLE"
+      }
+    },
+    "expected_output": {
+      "status_code": 200,
+      "message": "Đổi trạng thái thành công[cite: 5]"
+    }
+  },
+  {
+    "test_id": "TC_DRIV_003",
+    "requirement_reference": {
+      "fr_id": "FR7.4",
+      "description": "Cập nhật vị trí GPS hiện tại[cite: 1, 5]"
+    },
+    "test_scenario": "Hệ thống ghi nhận vị trí GPS mới của tài xế[cite: 5]",
+    "input": {
+      "endpoint": "POST /drivers/location",
+      "headers": {
+        "Authorization": "Bearer <valid_driver_token>",
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "lat": 10.822159,
+        "lng": 106.686844
+      }
+    },
+    "expected_output": {
+      "status_code": 200,
+      "message": "Vị trí được hệ thống ghi nhận[cite: 5]"
+    }
+  },
+  {
+    "test_id": "TC_TRIP_001",
+    "requirement_reference": {
+      "fr_id": "FR1.1 -> FR1.4",
+      "description": "Khách hàng gửi yêu cầu đặt xe[cite: 1, 10]"
+    },
+    "test_scenario": "Tạo chuyến đi thành công[cite: 10]",
+    "input": {
+      "endpoint": "POST /trips",
+      "headers": {
+        "Authorization": "Bearer <valid_token>",
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "pickup_location": "12 Nguyễn Văn Bảo, Gò Vấp",
+        "dropoff_location": "Sân bay Tân Sơn Nhất",
+        "service_type_id": "4_SEATS"
+      }
+    },
+    "expected_output": {
+      "status_code": 201,
+      "body": {
+        "trip_id": "trip-999",
+        "status": "SEARCHING"
+      },
+      "description": "Yêu cầu được tiếp nhận, bắt đầu tìm tài xế[cite: 10]"
+    }
+  },
+  {
+    "test_id": "TC_TRIP_002",
+    "requirement_reference": {
+      "fr_id": "FR3.2",
+      "description": "Tài xế cập nhật trạng thái chuyến đi[cite: 1, 10]"
+    },
+    "test_scenario": "Tài xế cập nhật trạng thái đã đến điểm đón (ARRIVED_AT_PICKUP)[cite: 10]",
+    "input": {
+      "endpoint": "PATCH /trips/trip-999/status",
+      "headers": {
+        "Authorization": "Bearer <valid_driver_token>",
+        "Content-Type": "application/json"
+      },
+      "path_variables": { "trip_id": "trip-999" },
+      "body": { "status": "ARRIVED_AT_PICKUP" }
+    },
+    "expected_output": {
+      "status_code": 200,
+      "message": "Trạng thái đã cập nhật[cite: 10]"
+    }
+  },
+  {
+    "test_id": "TC_TRIP_003",
+    "requirement_reference": {
+      "fr_id": "FR3.1, FR3.3",
+      "description": "Khách hàng theo dõi trạng thái và ETA[cite: 1, 10]"
+    },
+    "test_scenario": "Lấy thông tin tracking chuyến đi và thời gian đến dự kiến[cite: 10]",
+    "input": {
+      "endpoint": "GET /trips/trip-999/tracking",
+      "headers": { "Authorization": "Bearer <valid_token>" },
+      "path_variables": { "trip_id": "trip-999" }
+    },
+    "expected_output": {
+      "status_code": 200,
+      "description": "Trả về thông tin vị trí tài xế và thời gian đến dự kiến[cite: 10]"
+    }
+  },
+  {
+    "test_id": "TC_PAY_001",
+    "requirement_reference": {
+      "fr_id": "FR4.1",
+      "description": "Tính cước chuyến đi sau khi hoàn thành[cite: 1, 7]"
+    },
+    "test_scenario": "Lấy thông tin cước phí thành công dựa trên trip_id[cite: 7]",
+    "input": {
+      "endpoint": "GET /payments/fare?trip_id=trip-999",
+      "headers": { "Authorization": "Bearer <valid_token>" }
+    },
+    "expected_output": {
+      "status_code": 200,
+      "body": {
+        "base_fare": 20000,
+        "distance_km": 5.5,
+        "total_amount": 85000
+      }
+    }
+  },
+  {
+    "test_id": "TC_PAY_002",
+    "requirement_reference": {
+      "fr_id": "FR4.2 -> FR4.5",
+      "description": "Thanh toán chuyến đi[cite: 1, 7]"
+    },
+    "test_scenario": "Thanh toán thành công bằng CREDIT_CARD[cite: 7]",
+    "input": {
+      "endpoint": "POST /payments/checkout",
+      "headers": {
+        "Authorization": "Bearer <valid_token>",
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "trip_id": "trip-999",
+        "method": "CREDIT_CARD"
+      }
+    },
+    "expected_output": {
+      "status_code": 200,
+      "body": {
+        "status": "SUCCESS"
+      },
+      "description": "Kết quả xử lý thanh toán[cite: 7]"
+    }
+  },
+  {
+    "test_id": "TC_RAT_001",
+    "requirement_reference": {
+      "fr_id": "FR8.1, FR8.2",
+      "description": "Khách hàng đánh giá tài xế[cite: 1, 8]"
+    },
+    "test_scenario": "Khách hàng gửi đánh giá 5 sao kèm nhận xét[cite: 8]",
+    "input": {
+      "endpoint": "POST /ratings",
+      "headers": {
+        "Authorization": "Bearer <valid_token>",
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "trip_id": "trip-999",
+        "score": 5,
+        "comment": "Tài xế chạy êm, nhiệt tình!"
+      }
+    },
+    "expected_output": {
+      "status_code": 201,
+      "message": "Đã lưu đánh giá[cite: 8]"
+    }
+  },
+  {
+    "test_id": "TC_NOTI_001",
+    "requirement_reference": {
+      "fr_id": "FR5.1, FR5.2",
+      "description": "Lấy danh sách thông báo của người dùng[cite: 1, 6]"
+    },
+    "test_scenario": "Người dùng lấy danh sách các thông báo chưa đọc[cite: 6]",
+    "input": {
+      "endpoint": "GET /notifications?is_read=false",
+      "headers": { "Authorization": "Bearer <valid_token>" }
+    },
+    "expected_output": {
+      "status_code": 200,
+      "description": "Danh sách thông báo[cite: 6]"
+    }
+  },
+  {
+    "test_id": "TC_RPT_001",
+    "requirement_reference": {
+      "fr_id": "FR10.1, FR10.2, FR10.3",
+      "description": "Báo cáo số lượng chuyến, doanh thu, tỷ lệ hoàn thành[cite: 1, 9]"
+    },
+    "test_scenario": "Nhân viên vận hành lấy thống kê dashboard theo ngày[cite: 9]",
+    "input": {
+      "endpoint": "GET /reports/dashboard?from_date=2026-09-01&to_date=2026-09-30",
+      "headers": { "Authorization": "Bearer <valid_admin_token>" }
+    },
+    "expected_output": {
+      "status_code": 200,
+      "body": {
+        "total_trips": 1500,
+        "completed_trips": 1420,
+        "total_revenue": 120500000,
+        "completion_rate": "94.6%"
+      },
+      "description": "Dữ liệu thống kê tổng hợp[cite: 9]"
+    }
+  },
+  {
+    "test_id": "TC_ADM_001",
+    "requirement_reference": {
+      "fr_id": "FR9.1",
+      "description": "Quản lý thông tin khách hàng, tài xế[cite: 1, 2]"
+    },
+    "test_scenario": "Quản trị viên lấy danh sách tài xế[cite: 2]",
+    "input": {
+      "endpoint": "GET /admin/users?role=DRIVER",
+      "headers": { "Authorization": "Bearer <valid_admin_token>" }
+    },
+    "expected_output": {
+      "status_code": 200,
+      "description": "Danh sách tài khoản[cite: 2]"
+    }
+  },
+  {
+    "test_id": "TC_ADM_002",
+    "requirement_reference": {
+      "fr_id": "FR9.2",
+      "description": "Giám sát chuyến đi đang diễn ra[cite: 1, 2]"
+    },
+    "test_scenario": "Quản trị viên lấy danh sách các chuyến đi có trạng thái IN_TRANSIT[cite: 2]",
+    "input": {
+      "endpoint": "GET /admin/trips/live",
+      "headers": { "Authorization": "Bearer <valid_admin_token>" }
+    },
+    "expected_output": {
+      "status_code": 200,
+      "description": "Các chuyến xe có trạng thái IN_TRANSIT[cite: 2]"
+    }
+  },
+  {
+    "test_id": "TC_ADM_003",
+    "requirement_reference": {
+      "fr_id": "FR9.3, FR12.1",
+      "description": "Xử lý sự cố chuyến đi thủ công và lưu Audit Log[cite: 1, 2]"
+    },
+    "test_scenario": "Nhân viên vận hành xử lý ngoại lệ EX07 - điều phối lại tài xế khác[cite: 1, 2]",
+    "input": {
+      "endpoint": "POST /admin/trips/trip-999/resolve",
+      "headers": {
+        "Authorization": "Bearer <valid_admin_token>",
+        "Content-Type": "application/json"
+      },
+      "path_variables": { "trip_id": "trip-999" },
+      "body": {
+        "action": "REASSIGN_DRIVER",
+        "note": "Khách báo tài xế cũ không liên lạc được, tìm tài xế mới."
+      }
+    },
+    "expected_output": {
+      "status_code": 200,
+      "message": "Đã xử lý và ghi Audit Log[cite: 2]"
+    }
+  }
+]
